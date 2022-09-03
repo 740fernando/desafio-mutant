@@ -11,6 +11,18 @@ import java.util.Objects;
 
 public class desafio_one {
     public static void main(String[] args) {
+        processPrincipal();
+    }
+
+    private static void processPrincipal() {
+        try{
+            processInternalSystem();
+        }catch (NumberFormatException e){
+            processError();
+        }
+    }
+
+    private static void processInternalSystem() {
         int[][] imageBitmap = processImage();
         Integer vectorLength = insertLength();
         verifyLengthIsValid(vectorLength);
@@ -19,6 +31,19 @@ public class desafio_one {
         Integer[] counter = new Integer[vectorLength];
         processValuesInVectorEqualsValuesInMatrix(imageBitmap, vectorLength, vectorValuesForSearch, counter);
         printResult(vectorLength, vectorValuesForSearch, counter);
+    }
+
+    private static void processError() {
+        int response = JOptionPane.showConfirmDialog (
+                null,
+                ConstantsUtils.MESSAGE_ERROR_QUESTION,
+                ConstantsUtils.MESSAGE_TITTLE_ERROR_QUESTION,
+                JOptionPane.YES_NO_OPTION);
+        if ((response == JOptionPane.YES_OPTION)) {
+            processPrincipal();
+        } else {
+            System.out.println(ConstantsUtils.MESSAGE_FINISH);
+        }
     }
 
     private static int[][] processImage() {

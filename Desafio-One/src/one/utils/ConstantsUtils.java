@@ -3,6 +3,9 @@ package one.utils;
 public interface ConstantsUtils {
     String MESSAGE_POSITION = "º posicao do vetor";
     String MESSAGE_ERROR = "bitmap inexistente";
+    String MESSAGE_ERROR_QUESTION = "Houve um erro. Gostaria de tentar novamente?";
+    String MESSAGE_TITTLE_ERROR_QUESTION = "Error";
+    String MESSAGE_FINISH = "finish";
     String MESSAGE_INPUT = "Digite o tamanho do vetor : min 0, max : 15";
     String MESSAGE_NUMBER_INVALID = "Numero invalido";
     String MESSAGE_VECTOR_POSITION = "Vetor na posição ";
