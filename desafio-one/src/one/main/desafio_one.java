@@ -98,7 +98,7 @@ public class desafio_one {
             Integer[] counter) {
         for (int x = 0; x < vectorLength; x++) {
             for (int y = 0; y < imageBitmap.length; y++) {
-                for (int z = 0; z < imageBitmap[x].length; z++) {
+                for (int z = 0; z < imageBitmap[y].length; z++) {
                     if (vectorValuesForSearch[x].equals(imageBitmap[x][y])) {
                         counter[x] = (Objects.isNull(counter[x]))
                                 ? 1
