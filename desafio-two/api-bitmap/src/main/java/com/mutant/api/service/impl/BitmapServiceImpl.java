@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.IOException;
 
 @Service
-public class BitmapServiceImpl implements BitmapService, ConstantsUtils {
+public class BitmapServiceImpl implements BitmapService  {
 
     @Override
     public BitmapResponse getImageMatrix() {
-        File logo = new File(LOGO);
+        File logo = new File(ConstantsUtils.LOGO);
         var response = new BitmapResponse();
         try {
             BufferedImage img;
