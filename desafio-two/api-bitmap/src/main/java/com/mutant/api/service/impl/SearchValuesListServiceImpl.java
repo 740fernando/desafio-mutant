@@ -38,24 +38,24 @@ public class SearchValuesListServiceImpl implements SearchValuesListService {
             List<ValuesFoundResponse> valuesFound) {
         for (int i = 0; i < request.getRequest().size(); i++) {
             int counter = 0;
-            var VO = new ValuesFoundResponse();
+            var vo = new ValuesFoundResponse();
             for (int x = 0; x < matrix.length; x++) {
                 for (int y = 0; y < matrix[x].length; y++) {
                     if (request.getRequest().get(i).getOccorrency() == matrix[x][y]) {
                         counter++;
-                        VO.setIncidentQuantity(String.valueOf(counter));
-                        if (Objects.isNull(VO.getValue())) {
-                            VO.setValue(String.valueOf(request.getRequest().get(i).getOccorrency()));
+                        vo.setIncidentQuantity(String.valueOf(counter));
+                        if (Objects.isNull(vo.getValue())) {
+                            vo.setValue(String.valueOf(request.getRequest().get(i).getOccorrency()));
                         }
                     } else {
-                        if (Objects.isNull(VO.getIncidentQuantity())) {
-                            VO.setIncidentQuantity(String.valueOf(counter));
-                            VO.setValue(String.valueOf(request.getRequest().get(i).getOccorrency()));
+                        if (Objects.isNull(vo.getIncidentQuantity())) {
+                            vo.setIncidentQuantity(String.valueOf(counter));
+                            vo.setValue(String.valueOf(request.getRequest().get(i).getOccorrency()));
                         }
                     }
                 }
             }
-            valuesFound.add(VO);
+            valuesFound.add(vo);
         }
     }
 }
