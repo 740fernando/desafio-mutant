@@ -1,5 +1,6 @@
 package com.mutant.api.service.impl;
 
+import com.mutant.api.exception.ResourceNotFoundException;
 import com.mutant.api.model.entities.response.BitmapResponse;
 import com.mutant.api.service.BitmapService;
 import com.mutant.api.utils.ConstantsUtils;
@@ -29,7 +30,7 @@ public class BitmapServiceImpl implements BitmapService  {
             response.setImageBitmap(imagemBitmap);
             return response;
         } catch (IOException e) {
-            throw new RuntimeException(ConstantsUtils.MESSAGE_ERROR);
+            throw new ResourceNotFoundException(ConstantsUtils.MESSAGE_ERROR);
         }
     }
 }
