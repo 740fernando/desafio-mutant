@@ -27,7 +27,7 @@ public class BitmapController {
     }
 
     @PostMapping(value = "/search/values",consumes ="application/json", produces = "application/json")
-    public SearchValuesListResponse searchValues(@RequestBody ValuesSearchListRequest requestDTO){
-        return searchValuesListService.search(requestDTO);
+    public SearchValuesListResponse searchValues(@RequestBody ValuesSearchListRequest request){
+        return searchValuesListService.search(request);
     }
 }
