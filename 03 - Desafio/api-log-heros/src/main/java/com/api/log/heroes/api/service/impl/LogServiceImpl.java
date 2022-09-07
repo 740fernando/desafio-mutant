@@ -1,9 +1,10 @@
 package com.api.log.heroes.api.service.impl;
 
 import com.api.log.heroes.api.model.entities.LogDetail;
+import com.api.log.heroes.api.model.entities.Respost;
 import com.api.log.heroes.api.model.mappers.LogDetailMapper;
 import com.api.log.heroes.api.repository.HeroesLogRepository;
-import com.api.log.heroes.api.service.HeroLogService;
+import com.api.log.heroes.api.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,12 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class HeroLogServiceImpl implements HeroLogService {
+public class LogServiceImpl implements LogService {
     private final HeroesLogRepository repository;
     private final LogDetailMapper mapper;
 
     @Autowired
-    public HeroLogServiceImpl(HeroesLogRepository repository, LogDetailMapper mapper) {
+    public LogServiceImpl(HeroesLogRepository repository, LogDetailMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -30,11 +31,17 @@ public class HeroLogServiceImpl implements HeroLogService {
         List<LogDetail> list = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("log.txt"))) {
             this.processFile(list, bufferedReader);
-            this.repository.saveAll(list);
             return list;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public List<LogDetail> saveLog(Respost respost) throws FileNotFoundException, IOException {
+        return (respost.isRespostSaveLog())
+                ? this.processSaveLogSuccess()
+                : this.processSaveLogError();
     }
 
     private void processFile(List<LogDetail> list, BufferedReader bufferedReader) throws IOException {
@@ -44,5 +51,20 @@ public class HeroLogServiceImpl implements HeroLogService {
             list.add(testResponse);
             Collections.sort(list, Comparator.comparing(LogDetail::getTurn));
         }
+    }
+
+    private List<LogDetail> processSaveLogSuccess() {
+        List<LogDetail> listInDirectory = new ArrayList<>();
+        try {
+            listInDirectory = this.getInformationLog();
+            this.repository.saveAll(listInDirectory);
+            return listInDirectory;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private List<LogDetail> processSaveLogError() {
+        throw new RuntimeException();
     }
 }
