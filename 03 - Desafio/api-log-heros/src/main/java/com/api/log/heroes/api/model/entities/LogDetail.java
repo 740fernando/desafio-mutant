@@ -21,5 +21,5 @@ public class LogDetail implements Serializable {
     private String nameHero;
     private String turn;
     private String time;
-    private String velocityAverage;
+    private Double velocityAverage;
 }
