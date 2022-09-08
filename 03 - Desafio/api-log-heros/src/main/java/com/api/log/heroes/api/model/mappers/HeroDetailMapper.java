@@ -1,6 +1,6 @@
 package com.api.log.heroes.api.model.mappers;
 
-import com.api.log.heroes.api.model.dto.HeroDetailRaceDTO;
+import com.api.log.heroes.api.model.dto.FinalistDetailRaceDTO;
 import com.api.log.heroes.api.model.entities.LogDetail;
 import org.springframework.stereotype.Component;
 
@@ -10,18 +10,18 @@ import java.util.List;
 @Component
 public class HeroDetailMapper {
 
-    private List<HeroDetailRaceDTO> responseForController = new ArrayList<>();
+    private List<FinalistDetailRaceDTO> responseForController = new ArrayList<>();
 
-    public List<HeroDetailRaceDTO> convertHeroDetailRace(List<LogDetail> listFinalista) {
+    public List<FinalistDetailRaceDTO> convertHeroDetailRace(List<LogDetail> listFinalista) {
         int counter = 1;
         for (LogDetail finalista : listFinalista) {
-            HeroDetailRaceDTO heroDetailRaceDTO = new HeroDetailRaceDTO();
-            heroDetailRaceDTO.setPosition(counter++);
-            heroDetailRaceDTO.setCodeHero(finalista.getCodeHero());
-            heroDetailRaceDTO.setNameHero(finalista.getNameHero());
-            heroDetailRaceDTO.setTurn(finalista.getTurn());
-            heroDetailRaceDTO.setTime(finalista.getTime());
-            responseForController.add(heroDetailRaceDTO);
+            FinalistDetailRaceDTO finalistDetailRaceDTO = new FinalistDetailRaceDTO();
+            finalistDetailRaceDTO.setPosition(counter++);
+            finalistDetailRaceDTO.setCodeHero(finalista.getCodeHero());
+            finalistDetailRaceDTO.setNameHero(finalista.getNameHero());
+            finalistDetailRaceDTO.setTurn(finalista.getTurn());
+            finalistDetailRaceDTO.setTime(finalista.getTime());
+            responseForController.add(finalistDetailRaceDTO);
         }
         return this.responseForController;
     }
