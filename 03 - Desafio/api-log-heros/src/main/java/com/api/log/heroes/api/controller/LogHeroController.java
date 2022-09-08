@@ -1,6 +1,7 @@
 package com.api.log.heroes.api.controller;
 
-import com.api.log.heroes.api.model.dto.HeroDetailRaceDTO;
+import com.api.log.heroes.api.model.dto.FinalistDetailRaceDTO;
+import com.api.log.heroes.api.model.dto.HeroRaceDTO;
 import com.api.log.heroes.api.model.entities.LogDetail;
 import com.api.log.heroes.api.model.entities.Respost;
 import com.api.log.heroes.api.service.HeroDetailService;
@@ -44,7 +45,15 @@ public class LogHeroController {
             origins = "*",
             methods = {RequestMethod.GET})
     @GetMapping("/information/race")
-    public List<HeroDetailRaceDTO> getInformationRace() throws IOException {
-        return heroDetailService.getInformationRace();
+    public List<FinalistDetailRaceDTO> getFinalists() throws IOException {
+        return heroDetailService.getFinalists();
+    }
+
+    @CrossOrigin(
+            origins = "*",
+            methods = {RequestMethod.GET})
+    @GetMapping("/information/race/heros")
+    public HeroRaceDTO getInformationEachHero() throws IOException {
+        return heroDetailService.getInformationEachHero();
     }
 }

@@ -15,7 +15,7 @@ public class LogDetailMapper {
         this.log.setNameHero(vet[1].substring(4));
         this.log.setTurn(vet[2]);
         this.log.setTime(vet[3]);
-        this.log.setVelocityAverage(vet[4]);
+        this.log.setVelocityAverage(Double.valueOf(vet[4].replace(",",".")));
         return log;
     }
 }

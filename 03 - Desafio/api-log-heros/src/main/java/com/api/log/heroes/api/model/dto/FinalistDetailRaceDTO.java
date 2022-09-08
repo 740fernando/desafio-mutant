@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HeroDetailRaceDTO {
+public class FinalistDetailRaceDTO {
     private Integer position;
     private String codeHero;
     private String nameHero;
