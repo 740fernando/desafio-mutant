@@ -5,6 +5,7 @@ import com.api.log.heroes.api.model.entities.LogDetail;
 import com.api.log.heroes.api.model.entities.Respost;
 import com.api.log.heroes.api.service.HeroDetailService;
 import com.api.log.heroes.api.service.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class LogHeroController {
     private final LogService logService;
     private final HeroDetailService heroDetailService;
 
+    @Autowired
     public LogHeroController(LogService logService, HeroDetailService heroDetailService) {
         this.logService = logService;
         this.heroDetailService = heroDetailService;
