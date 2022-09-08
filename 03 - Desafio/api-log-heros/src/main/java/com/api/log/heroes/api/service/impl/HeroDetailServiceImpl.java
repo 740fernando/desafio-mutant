@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class HeroDetailServiceImpl implements HeroDetailService {
+
     private final LogService service;
     private final HeroDetailMapper mapper;
 
