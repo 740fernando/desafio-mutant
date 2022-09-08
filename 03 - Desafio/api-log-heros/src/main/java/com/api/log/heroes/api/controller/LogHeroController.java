@@ -2,8 +2,9 @@ package com.api.log.heroes.api.controller;
 
 import com.api.log.heroes.api.model.dto.HeroDetailRaceDTO;
 import com.api.log.heroes.api.model.entities.LogDetail;
+import com.api.log.heroes.api.model.entities.Respost;
 import com.api.log.heroes.api.service.HeroDetailService;
-import com.api.log.heroes.api.service.HeroLogService;
+import com.api.log.heroes.api.service.LogService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -13,11 +14,11 @@ import java.util.List;
 @RequestMapping("/api/log/hero/v1")
 public class LogHeroController {
 
-    private final HeroLogService heroLogService;
+    private final LogService logService;
     private final HeroDetailService heroDetailService;
 
-    public LogHeroController(HeroLogService heroLogService, HeroDetailService heroDetailService) {
-        this.heroLogService = heroLogService;
+    public LogHeroController(LogService logService, HeroDetailService heroDetailService) {
+        this.logService = logService;
         this.heroDetailService = heroDetailService;
     }
 
@@ -26,7 +27,15 @@ public class LogHeroController {
             methods = {RequestMethod.GET})
     @GetMapping()
     public List<LogDetail> getInformationLog() throws IOException {
-        return heroLogService.getInformationLog();
+        return logService.getInformationLog();
+    }
+
+    @CrossOrigin(
+            origins = "*",
+            methods = {RequestMethod.POST})
+    @PostMapping()
+    public List<LogDetail> saveLog(@RequestBody Respost respost) throws IOException {
+        return logService.saveLog(respost);
     }
 
     @CrossOrigin(

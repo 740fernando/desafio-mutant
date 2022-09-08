@@ -4,7 +4,7 @@ import com.api.log.heroes.api.model.dto.HeroDetailRaceDTO;
 import com.api.log.heroes.api.model.entities.LogDetail;
 import com.api.log.heroes.api.model.mappers.HeroDetailMapper;
 import com.api.log.heroes.api.service.HeroDetailService;
-import com.api.log.heroes.api.service.HeroLogService;
+import com.api.log.heroes.api.service.LogService;
 import com.api.log.heroes.api.utils.ConstantsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,34 +17,34 @@ import java.util.List;
 
 @Service
 public class HeroDetailServiceImpl implements HeroDetailService {
-    private final HeroLogService service;
+
+    private final LogService service;
     private final HeroDetailMapper mapper;
 
     @Autowired
-    public HeroDetailServiceImpl(HeroLogService service, HeroDetailMapper mapper) {
+    public HeroDetailServiceImpl(LogService service, HeroDetailMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
 
     @Override
     public List<HeroDetailRaceDTO> getInformationRace() throws IOException {
-        final var responseLog = service.getInformationLog();
-        List<HeroDetailRaceDTO> responseForController = new ArrayList<>();
-        List<LogDetail> listFinalista = new ArrayList<>();
-        verifyFinalist(responseLog, listFinalista);
-        orderList(listFinalista);
-        return mapper.convertHeroDetailRace(listFinalista);
+        final var responseLog = this.service.getInformationLog();
+        List<LogDetail> listFinalist = new ArrayList<>();
+        this.verifyFinalist(responseLog, listFinalist);
+        this.orderList(listFinalist);
+        return this.mapper.convertHeroDetailRace(listFinalist);
     }
 
-    private static void orderList(List<LogDetail> listFinalista) {
-        Collections.sort(listFinalista, Comparator.comparing(LogDetail::getTime));
-    }
-
-    private static void verifyFinalist(List<LogDetail> responseLog, List<LogDetail> listFinalista) {
-        for (LogDetail output : responseLog) {
-            if (ConstantsUtils.FOUR.equals(output.getTurn())) {
-                listFinalista.add(output);
+    private void verifyFinalist(List<LogDetail> responseLog, List<LogDetail> listFinalist) {
+        responseLog.forEach(element -> {
+            if (ConstantsUtils.FOUR.equals(element.getTurn())) {
+                listFinalist.add(element);
             }
-        }
+        });
+    }
+
+    private void orderList(List<LogDetail> listFinalist) {
+        Collections.sort(listFinalist, Comparator.comparing(LogDetail::getTime));
     }
 }
