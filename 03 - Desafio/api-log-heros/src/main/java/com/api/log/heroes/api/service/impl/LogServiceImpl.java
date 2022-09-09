@@ -1,18 +1,23 @@
 package com.api.log.heroes.api.service.impl;
 
+import com.api.log.heroes.api.model.dto.InformationLogDTO;
+import com.api.log.heroes.api.model.dto.RespostDTO;
+import com.api.log.heroes.api.model.dto.SaveLogDTO;
 import com.api.log.heroes.api.model.entities.LogDetail;
-import com.api.log.heroes.api.model.entities.Respost;
 import com.api.log.heroes.api.model.mappers.LogDetailMapper;
+import com.api.log.heroes.api.model.vo.LogDetailVO;
+import com.api.log.heroes.api.model.vo.SaveLogVO;
 import com.api.log.heroes.api.repository.HeroesLogRepository;
 import com.api.log.heroes.api.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LogServiceImpl implements LogService {
@@ -26,9 +31,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<LogDetail> getInformationLog() throws FileNotFoundException {
-        StringBuffer sb = new StringBuffer();
-        List<LogDetail> list = new ArrayList<>();
+    public InformationLogDTO getInformationLog() throws IOException {
+        InformationLogDTO list = new InformationLogDTO();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("log.txt"))) {
             this.processFile(list, bufferedReader);
             return list;
@@ -38,33 +42,35 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<LogDetail> saveLog(Respost respost) throws FileNotFoundException, IOException {
-        return (respost.isRespostSaveLog())
+    public SaveLogDTO saveLog(RespostDTO respostDTO) throws IOException {
+        return (respostDTO.isRespostSaveLog())
                 ? this.processSaveLogSuccess()
                 : this.processSaveLogError();
     }
 
-    private void processFile(List<LogDetail> list, BufferedReader bufferedReader) throws IOException {
+    private void processFile(InformationLogDTO list, BufferedReader bufferedReader) throws IOException {
         for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
             String[] vet = line.split(";");
-            LogDetail testResponse = this.mapper.convertVectorForLogDetail(vet);
-            list.add(testResponse);
-            Collections.sort(list, Comparator.comparing(LogDetail::getTurn));
+            LogDetailVO testResponse = this.mapper.convertVectorForLogDetailVO(vet);
+            list.getResponse().add(testResponse);
+            Collections.sort(list.getResponse(), Comparator.comparing(LogDetailVO::getTurn));
         }
     }
 
-    private List<LogDetail> processSaveLogSuccess() {
-        List<LogDetail> listInDirectory = new ArrayList<>();
+    private SaveLogDTO processSaveLogSuccess() {
+        SaveLogDTO saveLogDTO = new SaveLogDTO();
         try {
-            listInDirectory = this.getInformationLog();
-            this.repository.saveAll(listInDirectory);
-            return listInDirectory;
+            var output = getInformationLog();
+            this.repository.saveAll(output.getResponse().stream().map(LogDetail::new).collect(Collectors.toList()));
+            var list = this.repository.findAll();
+            saveLogDTO.setResponseSaveLog(list.stream().map(SaveLogVO::new).collect(Collectors.toList()));
+            return saveLogDTO;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private List<LogDetail> processSaveLogError() {
+    private SaveLogDTO processSaveLogError() {
         throw new RuntimeException();
     }
 }
