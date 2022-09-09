@@ -1,14 +1,14 @@
 package com.api.log.heroes.api.model.dto;
 
+import com.api.log.heroes.api.model.vo.FinalistDetailRaceVO;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 public class FinalistDetailRaceDTO {
-    private Integer position;
-    private String codeHero;
-    private String nameHero;
-    private String turn;
-    private String time;
+    private List<FinalistDetailRaceVO> response = new ArrayList<>();
 }

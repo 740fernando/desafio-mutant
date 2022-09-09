@@ -2,9 +2,8 @@ package com.api.log.heroes.api.service.impl;
 
 import com.api.log.heroes.api.model.dto.FinalistDetailRaceDTO;
 import com.api.log.heroes.api.model.dto.HeroRaceDTO;
-import com.api.log.heroes.api.model.dto.TheBestTurnDTO;
-import com.api.log.heroes.api.model.entities.LogDetail;
-import com.api.log.heroes.api.model.mappers.HeroDetailMapper;
+import com.api.log.heroes.api.model.dto.InformationLogDTO;
+import com.api.log.heroes.api.model.vo.FinalistDetailRaceVO;
 import com.api.log.heroes.api.model.vo.HeroVO;
 import com.api.log.heroes.api.model.vo.LogDetailVO;
 import com.api.log.heroes.api.service.HeroDetailService;
@@ -15,47 +14,46 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 public class HeroDetailServiceImpl implements HeroDetailService {
 
     private final LogService service;
-    private final HeroDetailMapper mapper;
 
     @Autowired
-    public HeroDetailServiceImpl(LogService service, HeroDetailMapper mapper) {
+    public HeroDetailServiceImpl(LogService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
     @Override
-    public List<FinalistDetailRaceDTO> getFinalists() throws IOException {
+    public FinalistDetailRaceDTO getFinalists() throws IOException {
         final var responseLog = this.service.getInformationLog();
-        List<LogDetail> listFinalist = new ArrayList<>();
+        FinalistDetailRaceDTO listFinalist = new FinalistDetailRaceDTO();
         this.verifyFinalist(responseLog, listFinalist);
         this.orderList(listFinalist);
-        return this.mapper.convertHeroDetailRace(listFinalist);
+        return listFinalist;
     }
 
     @Override
     public HeroRaceDTO getInformationEachHero() throws IOException {
-        final var theBestTurnDTO = new TheBestTurnDTO();
-        List<LogDetail> flash = new ArrayList<>();
+        final var theBestTurnDTO = new InformationLogDTO();
+        List<LogDetailVO> flash = new ArrayList<>();
         Double averageVelocityAllTurnsFlash = 0.0;
-        List<LogDetail> gatoJato = new ArrayList<>();
+        List<LogDetailVO> gatoJato = new ArrayList<>();
         Double averageVelocityAllTurnsGatoJato = 0.0;
-        List<LogDetail> mercurio = new ArrayList<>();
+        List<LogDetailVO> mercurio = new ArrayList<>();
         Double averageVelocityAllTurnsMercurio = 0.0;
-        List<LogDetail> papalegua = new ArrayList<>();
+        List<LogDetailVO> papalegua = new ArrayList<>();
         Double averageVelocityAllTurnsPapalegua = 0.0;
-        List<LogDetail> sonic = new ArrayList<>();
+        List<LogDetailVO> sonic = new ArrayList<>();
         Double averageVelocityAllTurnsSonic = 0.0;
-        List<LogDetail> superman = new ArrayList<>();
+        List<LogDetailVO> superman = new ArrayList<>();
         Double averageVelocityAllTurnsSuperman = 0.0;
         final var responseLog = this.service.getInformationLog();
-        Collections.sort(responseLog, Comparator.comparing(LogDetail::getNameHero));
-        for (LogDetail output : responseLog) {
+        Collections.sort(responseLog.getResponse(), Comparator.comparing(LogDetailVO::getNameHero));
+        for (LogDetailVO output : responseLog.getResponse()) {
             averageVelocityAllTurnsFlash = processFlash(flash, averageVelocityAllTurnsFlash, output);
             averageVelocityAllTurnsGatoJato = processGatoJato(gatoJato, averageVelocityAllTurnsGatoJato, output);
             averageVelocityAllTurnsMercurio = processMercurio(mercurio, averageVelocityAllTurnsMercurio, output);
@@ -75,7 +73,7 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return responseDefinitive;
     }
 
-    private static Double processSuperman(List<LogDetail> superman, Double averageVelocityAllTurnsSuperman, LogDetail output) {
+    private static Double processSuperman(List<LogDetailVO> superman, Double averageVelocityAllTurnsSuperman, LogDetailVO output) {
         if (output.getNameHero().equals(ConstantsUtils.SUPERMAN)) {
             superman.add(output);
             averageVelocityAllTurnsSuperman += output.getVelocityAverage();
@@ -83,7 +81,7 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return averageVelocityAllTurnsSuperman;
     }
 
-    private static Double processSonic(List<LogDetail> sonic, Double averageVelocityAllTurnsSonic, LogDetail output) {
+    private static Double processSonic(List<LogDetailVO> sonic, Double averageVelocityAllTurnsSonic, LogDetailVO output) {
         if (output.getNameHero().equals(ConstantsUtils.SONIC)) {
             sonic.add(output);
             averageVelocityAllTurnsSonic += output.getVelocityAverage();
@@ -91,7 +89,7 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return averageVelocityAllTurnsSonic;
     }
 
-    private static Double processPapalegua(List<LogDetail> papalegua, Double averageVelocityAllTurnsPapalegua, LogDetail output) {
+    private static Double processPapalegua(List<LogDetailVO> papalegua, Double averageVelocityAllTurnsPapalegua, LogDetailVO output) {
         if (output.getNameHero().equals(ConstantsUtils.PAPALEGUA) || output.getNameHero().equals(ConstantsUtils.PAPALEGU)) {
             papalegua.add(output);
             averageVelocityAllTurnsPapalegua += output.getVelocityAverage();
@@ -99,7 +97,7 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return averageVelocityAllTurnsPapalegua;
     }
 
-    private static Double processMercurio(List<LogDetail> mercurio, Double averageVelocityAllTurnsMercurio, LogDetail output) {
+    private static Double processMercurio(List<LogDetailVO> mercurio, Double averageVelocityAllTurnsMercurio, LogDetailVO output) {
         if (output.getNameHero().equals(ConstantsUtils.MERCURIO)) {
             mercurio.add(output);
             averageVelocityAllTurnsMercurio += output.getVelocityAverage();
@@ -107,7 +105,7 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return averageVelocityAllTurnsMercurio;
     }
 
-    private static Double processGatoJato(List<LogDetail> gatoJato, Double averageVelocityAllTurnsGatoJato, LogDetail output) {
+    private static Double processGatoJato(List<LogDetailVO> gatoJato, Double averageVelocityAllTurnsGatoJato, LogDetailVO output) {
         if (output.getNameHero().equals(ConstantsUtils.GATOAJATO)) {
             gatoJato.add(output);
             averageVelocityAllTurnsGatoJato += output.getVelocityAverage();
@@ -115,52 +113,58 @@ public class HeroDetailServiceImpl implements HeroDetailService {
         return averageVelocityAllTurnsGatoJato;
     }
 
-    private static Double processFlash(List<LogDetail> flash, Double averageVelocityAllTurnsFlash, LogDetail output) {
-        if (output.getNameHero().equals(ConstantsUtils.Flash)) {
+    private static Double processFlash(List<LogDetailVO> flash, Double averageVelocityAllTurnsFlash, LogDetailVO output) {
+        if (output.getNameHero().equals(ConstantsUtils.FLASH)) {
             flash.add(output);
             averageVelocityAllTurnsFlash += output.getVelocityAverage();
         }
         return averageVelocityAllTurnsFlash;
     }
 
-    private HeroRaceDTO processResponse(TheBestTurnDTO theBestTurnDTO, List<LogDetail> flash, Double averageVelocityAllTurnsFlash, List<LogDetail> gatoJato, Double averageVelocityAllTurnsGatoJato, List<LogDetail> mercurio, Double averageVelocityAllTurnsMercurio, List<LogDetail> papalegua, Double averageVelocityAllTurnsPapalegua, List<LogDetail> sonic, Double averageVelocityAllTurnsSonic, List<LogDetail> superman, Double averageVelocityAllTurnsSuperman) {
+    private HeroRaceDTO processResponse(InformationLogDTO informationLogDTO, List<LogDetailVO> flash, Double averageVelocityAllTurnsFlash, List<LogDetailVO> gatoJato, Double averageVelocityAllTurnsGatoJato, List<LogDetailVO> mercurio, Double averageVelocityAllTurnsMercurio, List<LogDetailVO> papalegua, Double averageVelocityAllTurnsPapalegua, List<LogDetailVO> sonic, Double averageVelocityAllTurnsSonic, List<LogDetailVO> superman, Double averageVelocityAllTurnsSuperman) {
         flash.get(0).setVelocityAverage(averageVelocityAllTurnsFlash);
         gatoJato.get(0).setVelocityAverage(averageVelocityAllTurnsGatoJato);
         mercurio.get(0).setVelocityAverage(averageVelocityAllTurnsMercurio);
         papalegua.get(0).setVelocityAverage(averageVelocityAllTurnsPapalegua);
         sonic.get(0).setVelocityAverage(averageVelocityAllTurnsSonic);
         superman.get(0).setVelocityAverage(averageVelocityAllTurnsSuperman);
-        theBestTurnDTO.getResponse().add(new LogDetailVO(flash.get(0)));
-        theBestTurnDTO.getResponse().add(new LogDetailVO(gatoJato.get(0)));
-        theBestTurnDTO.getResponse().add(new LogDetailVO(mercurio.get(0)));
-        theBestTurnDTO.getResponse().add(new LogDetailVO(papalegua.get(0)));
-        theBestTurnDTO.getResponse().add(new LogDetailVO(sonic.get(0)));
-        theBestTurnDTO.getResponse().add(new LogDetailVO(superman.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(flash.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(gatoJato.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(mercurio.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(papalegua.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(sonic.get(0)));
+        informationLogDTO.getResponse().add(new LogDetailVO(superman.get(0)));
 
-        Collections.sort(theBestTurnDTO.getResponse(), Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(informationLogDTO.getResponse(), Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
         HeroRaceDTO responseDefinitive = new HeroRaceDTO();
-        responseDefinitive.setResponse(theBestTurnDTO.getResponse().stream().map(HeroVO::new).collect(Collectors.toList()));
+        responseDefinitive.setResponse(informationLogDTO.getResponse().stream().map(HeroVO::new).collect(Collectors.toList()));
         return responseDefinitive;
     }
 
-    private void orderLists(List<LogDetail> flash, List<LogDetail> gatoJato, List<LogDetail> mercurio, List<LogDetail> papalegua, List<LogDetail> sonic, List<LogDetail> superman) {
-        Collections.sort(flash, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
-        Collections.sort(gatoJato, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
-        Collections.sort(mercurio, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
-        Collections.sort(papalegua, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
-        Collections.sort(sonic, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
-        Collections.sort(superman, Comparator.comparing(LogDetail::getVelocityAverage).reversed());
+    private void orderLists(List<LogDetailVO> flash, List<LogDetailVO> gatoJato, List<LogDetailVO> mercurio, List<LogDetailVO> papalegua, List<LogDetailVO> sonic, List<LogDetailVO> superman) {
+        Collections.sort(flash, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(gatoJato, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(mercurio, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(papalegua, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(sonic, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
+        Collections.sort(superman, Comparator.comparing(LogDetailVO::getVelocityAverage).reversed());
     }
 
-    private void verifyFinalist(List<LogDetail> responseLog, List<LogDetail> listFinalist) {
-        responseLog.forEach(element -> {
-            if (ConstantsUtils.FOUR.equals(element.getTurn())) {
-                listFinalist.add(element);
-            }
+    private void verifyFinalist(InformationLogDTO responseLog, FinalistDetailRaceDTO listFinalist) {
+        listFinalist.setResponse(
+                responseLog.getResponse()
+                        .stream()
+                        .filter(element -> ConstantsUtils.FOUR.equals(element.getTurn()))
+                        .map(FinalistDetailRaceVO::new)
+                        .collect(Collectors.toList()));
+    }
+
+    private void orderList(FinalistDetailRaceDTO listFinalist) {
+        Collections.sort(listFinalist.getResponse(), Comparator.comparing(FinalistDetailRaceVO::getTime));
+        AtomicInteger counter = new AtomicInteger();
+        listFinalist.getResponse().forEach(element ->{
+            counter.getAndIncrement();
+            element.setPosition(counter.get());
         });
-    }
-
-    private void orderList(List<LogDetail> listFinalist) {
-        Collections.sort(listFinalist, Comparator.comparing(LogDetail::getTime));
     }
 }
