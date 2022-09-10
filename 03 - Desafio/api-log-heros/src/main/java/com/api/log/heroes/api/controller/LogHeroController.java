@@ -40,7 +40,7 @@ public class LogHeroController {
     @CrossOrigin(
             origins = "*",
             methods = {RequestMethod.GET})
-    @GetMapping("/information/race")
+    @GetMapping("/informations/finalists/race")
     public FinalistDetailRaceDTO getFinalists() throws IOException {
         return heroDetailService.getFinalists();
     }
@@ -48,7 +48,7 @@ public class LogHeroController {
     @CrossOrigin(
             origins = "*",
             methods = {RequestMethod.GET})
-    @GetMapping("/information/race/heros")
+    @GetMapping("/informations/best/turn/hero/and/average/all/turns")
     public HeroRaceDTO getTheBestTurnEachHeroAndVelocityAverageAllTurns() throws IOException {
         return heroDetailService.getInformationEachHero();
     }

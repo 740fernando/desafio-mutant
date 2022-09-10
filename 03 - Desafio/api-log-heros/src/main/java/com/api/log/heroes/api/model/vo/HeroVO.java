@@ -18,6 +18,6 @@ public class HeroVO {
         this.bestTurn = output.getTurn();
         this.codeHero = output.getCodeHero();
         this.nameHero = output.getNameHero();
-        this.velocityAverageInAllTurns = new DecimalFormat("#.###").format(output.getVelocityAverage());
+        this.velocityAverageInAllTurns = Double.valueOf(new DecimalFormat("#.###").format(output.getVelocityAverage()).replace(",","."));
     }
 }
