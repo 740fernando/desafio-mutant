@@ -53,7 +53,10 @@ public class LogServiceImpl implements LogService {
             String[] vet = line.split(";");
             LogDetailVO testResponse = this.mapper.convertVectorForLogDetailVO(vet);
             list.getResponse().add(testResponse);
-            Collections.sort(list.getResponse(), Comparator.comparing(LogDetailVO::getTurn));
+            Collections.sort(
+                    list.getResponse(),
+                    Comparator.comparing(LogDetailVO::getTurn)
+                            .thenComparingDouble(LogDetailVO::getVelocityAverage));
         }
     }
 
