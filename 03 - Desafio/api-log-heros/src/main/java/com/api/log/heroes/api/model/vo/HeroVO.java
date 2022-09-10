@@ -12,7 +12,7 @@ public class HeroVO {
     private String bestTurn;
     private String codeHero;
     private String nameHero;
-    private Double velocityAverageInAllTurns;
+    private String velocityAverageInAllTurns;
 
     public HeroVO(LogDetailVO output){
         this.bestTurn = output.getTurn();
