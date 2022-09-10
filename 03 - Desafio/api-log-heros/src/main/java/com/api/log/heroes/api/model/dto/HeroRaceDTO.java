@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,5 +14,5 @@ import java.util.List;
 @Getter
 @Setter
 public class HeroRaceDTO {
-    private List<HeroVO> response;
+    private List<HeroVO> response = new ArrayList<>();
 }
